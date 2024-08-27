@@ -23,7 +23,7 @@ getwd()
 ## Task 2
 
 ```{r}
-ddt <- read.csv("DDT-1.csv")
+ddt <- read.csv("DDT.csv")
 head(ddt)
 ```
 
@@ -66,6 +66,24 @@ mean(ddt$LENGTH)
 sd(ddt$WEIGHT)
 ```
 
+### Is the plot showing Length vs Weight from the ddt data frame?  
+
+Looking at the names on the axis, the plot is not Showing Length vs Weight but is instead showing Weight vs Length.  
+
+A correct graph of Length vs Weight would be:
+```{r}
+library(ggplot2)
+ggplot(ddt, aes(x = LENGTH,
+                y = WEIGHT,)) +
+  geom_point() + ggtitle('Length vs Weight')
+```
+
+### If v is 1:20 what is (the last value of v)/20
+```{r}
+v=1:20
+ans=v[20]/20
+cat(ans)
+```
 ## Task 5
 ### Make a table of the rivers
 ```{r}
