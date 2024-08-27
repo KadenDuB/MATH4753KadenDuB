@@ -1,0 +1,90 @@
+---
+title: "Lab2"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+# Tasks
+## Task 1
+### Get working directory
+```{r}
+getwd()
+```
+
+## Task 2
+### Read the EPAGAS.csv file into R
+```{r}
+epagas <- read.csv('EPAGAS.csv')
+```
+
+### Obtain the first 6 entries of Epagas
+```{r}
+head(epagas)
+```
+
+## Task 3
+### Make the object mpg, a miles per galon vector
+```{r}
+mpg=epagas$MPG
+```
+
+### Transform the mpg to z
+```{r}
+z=(mpg-mean(mpg))/sd(mpg)
+```
+
+### Find the values of mpg that are possible outliers using z
+```{r}
+mpg[abs(z)>=2 & abs(z)<=3]
+```
+
+### Find the values of mpg that are defined as outliers
+```{r}
+mpg[abs(z)>3]
+```
+
+### Construct a dotplot of mpg with colors
+```{r}
+library(lattice)
+dotcol = ifelse(abs(z)>3, "Red",
+          ifelse(abs(z)>=2 & abs(z)<=3,"Blue", 
+            "Black"))
+dotplot(mpg, col=dotcol)
+```
+
+## Task 4
+### Make a boxplot of the MPG varaiable meeting specifications
+```{r}
+library(ggplot2)
+ggplot(epagas, aes(x='',y=mpg)) + 
+  geom_boxplot(fill='Black', notch=TRUE) + coord_flip() + ggtitle("Miles Per Gallon - Kaden DuBois")
+```
+
+### Use Chebyshev’s theorem to predict the proportion of data within 2 standard deviations of the mean
+
+3/4 of the data should be within 2 standard deviations of the mean
+
+### Calculate the exact proportion within 2 standard deviation of the mean
+```{r}
+length(mpg[abs(z)<2])/length(mpg)
+```
+
+### Does Chebyshev agree with the data?
+
+Chebyshev's theorem does not agree with the data, it provides a prediction much lower than the actual value.
+
+### Use the emperical rule to predict the proportion of data within 2 standard deviations of the mean
+
+The emperical rule states that approximately 95% of the data should be within 2 standard deviations of the mean.
+
+### How well does it correspond?
+
+The emperical rule corresponds almost exactly to the actual value that is calculated.
+
+### Is the emperical rule valid in this case?
+
+Yes the emperical rule is valid in this case. The shape of the data is approximately mound shaped and symetric (shown by the concentration of dots on the dot plot in Task 3). This means that the emperical rule is valid to use in this case, which is further supported by the accuracy of its approximation.
