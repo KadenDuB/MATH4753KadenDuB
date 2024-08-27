@@ -26,3 +26,131 @@ getwd()
 ddt <- read.csv("DDT-1.csv")
 head(ddt)
 ```
+
+## Task 3
+
+### Qualitative Variables
+```{r}
+cat('RIVER', 'SPECIES')
+```
+
+### Quantitative Variables
+```{r}
+cat('MILE', 'LENGTH', 'WIDTH', 'DDT')
+```
+
+### Number of Species
+```{r}
+numSpec <- length(unique(ddt$SPECIES))
+cat(numSpec)
+```
+
+### LMBASS bigger than 800gms
+```{r}
+with(ddt, ddt[SPECIES == 'LMBASS' & WEIGHT > 800,])
+```
+
+### DDT bigger than 4.0 in SCM river
+```{r}
+with(ddt, ddt[RIVER == 'SCM' & DDT > 4.0,])
+```
+
+## Task 4
+### Mean Length of Fish
+```{r}
+mean(ddt$LENGTH)
+```
+
+### Standard Deviation of the Weight of Fish
+```{r}
+sd(ddt$WEIGHT)
+```
+
+## Task 5
+### Make a table of the rivers
+```{r}
+riverTable=table(ddt$RIVER)
+```
+
+### Make a color coded barplot of the rivers table
+```{r}
+barplot(riverTable,beside=TRUE,col=rainbow(4))
+```
+
+### Table of the rivers crossed with the species of fish
+```{r}
+riverSpecies=table(ddt$RIVER,ddt$SPECIES)
+```
+
+### Color coded barplot of the crossed table
+```{r}
+barplot(riverSpecies,beside=TRUE,col=rainbow(4))
+```
+
+## Task 6
+### Piechart of fish Species
+```{r}
+pie(with(ddt,table(SPECIES)))
+```
+
+### Piechart of Rivers
+```{r}
+pie(with(ddt,table(RIVER)))
+```
+
+## Task 7
+### Boxplot of the variable DDT
+```{r}
+with(ddt,boxplot(DDT))
+```
+
+### Boxplot of the variable WEIGHT
+```{r}
+with(ddt,boxplot(WEIGHT))
+```
+
+### Boxplot of the variable LENGTH
+```{r}
+with(ddt,boxplot(LENGTH))
+```
+
+## Task 8
+### Coplot of LENGTH vs WIDTH given RIVER
+```{r}
+with(ddt,coplot(LENGTH~WEIGHT|RIVER))
+```
+
+### Coplot of DDT vs WEIGHT given SPECIES
+```{r}
+with(ddt,coplot(DDT~WEIGHT|SPECIES))
+```
+
+## Task 9
+### ggplot boxplot
+```{r}
+library(ggplot2)
+ggplot(ddt, aes(x = SPECIES,
+                y = WEIGHT,
+                fill = RIVER)) + 
+  geom_boxplot() + ggtitle('Kaden DuBois')
+
+```
+
+### ggplot violin plot
+```{r}
+library(ggplot2)
+ggplot(ddt, aes(x = RIVER,
+                y = LENGTH,
+                fill = SPECIES)) +
+  geom_violin() + ggtitle('Kaden DuBois')
+```
+
+### ggplot scatter plot
+```{r}
+library(ggplot2)
+ggplot(ddt, aes(x = WEIGHT,
+                y = LENGTH,
+                color = SPECIES)) +
+  geom_point() + ggtitle('Kaden DuBois')
+```
+

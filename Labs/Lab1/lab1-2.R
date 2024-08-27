@@ -12,7 +12,7 @@ getwd()
 
 #ddt=read.table(file.choose(),sep=",",header=TRUE) 
 
-ddt = read.csv("DDT.csv")
+ddt = read.csv("DDT-1.csv")
 
 # First six lines
 head(ddt)
