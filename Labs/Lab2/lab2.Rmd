@@ -37,6 +37,16 @@ mpg=epagas$MPG
 z=(mpg-mean(mpg))/sd(mpg)
 ```
 
+Verify that the mean value of z is 0
+```{r}
+mean(z)
+```
+
+Verify that the standard deviation of z squared is 1
+```{r}
+sd(z)^2
+```
+
 ### Find the values of mpg that are possible outliers using z
 ```{r}
 mpg[abs(z)>=2 & abs(z)<=3]
@@ -86,5 +96,9 @@ The emperical rule states that approximately 95% of the data should be within 2 
 The emperical rule corresponds almost exactly to the actual value that is calculated.
 
 ### Is the emperical rule valid in this case?
+We can use a histogram to visualize the distribution of the data.
+```{r}
+ggplot(epagas,aes(x=MPG)) + geom_histogram()
+```  
 
-Yes the emperical rule is valid in this case. The shape of the data is approximately mound shaped and symetric (shown by the concentration of dots on the dot plot in Task 3). This means that the emperical rule is valid to use in this case, which is further supported by the accuracy of its approximation.
+Looking at this histogram, we can see that the data is approximately symmetrical and mound shaped. Because of this distribution, the emperical rule is valid to use in this case.
