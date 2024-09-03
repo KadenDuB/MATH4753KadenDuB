@@ -1,0 +1,122 @@
+---
+title: "Assignment 1"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+## Questions Completed
+I have completed 5/15 questions
+
+## Question 1
+4 Assignments of equal value = 15% of grade  
+Labs = 10%  
+Projects = 10% (1/2 Project 1 2/3 Project 2)  
+In-Class Quizzes = 10%  
+Online Chapter Quizzes = 5%  
+Midterms = 20% (10% each)  
+Final = 30%  
+A(90%+) B(80%+) C(60%+) D(50%+) F(<50%)  
+No Curving  
+
+## Question 2
+### a) Coplot
+```{r}
+ddt <- read.csv('DDT.csv')
+coplot(LENGTH ~ WEIGHT | RIVER * SPECIES, ddt, col = ddt$MILE)
+```
+
+### b) Lower left 3 Interpretation
+All of the Catfish found on the FCM river were on the same mile.  
+All of the Catfish found on the LCM river were on the same mile.  
+All of the Catfish found on the SCM river were on the same mile.  
+However, these are not the same mile for all of the rivers.  
+
+### c) Line A
+Line A breaks down the mile variable into a vector of numbers.
+
+### d) Line B
+Line B finds the number of unique mile values in the vector.
+
+### e) Top 6 plots
+The top left 6 plots are empty because those species of fish were not found in those rivers.
+
+### f) Mean Value of DDT for CCATFISH in FCM
+```{r}
+mean(ddt[ddt$RIVER == 'FCM' & ddt$SPECIES == 'CCATFISH']$DDT)
+```
+
+## Question 3
+
+### a) Length of maximum span
+Quantitative
+
+### b) Number of vehicle lanes
+Quantitative
+
+### c) Toll bridge
+Qualitative
+
+### d Average daily traffic
+Quantitative
+
+### e) Condition of deck
+Qualitative
+
+### f) Bypass or detour length
+Quantitative
+
+### g) Route type
+Qualitative
+
+## Question 4
+
+### a) Names of the four random sampling designs
+Simple random sample, stratified random sampling, cluster sampling, and systematic sampling.
+
+### b) Brief Description of each type
+Simple random sampling - A random number generator is used to select the random sample.  
+Stratified random sampling - Experimental units associated with the population can be separated into two or more groups of units (strata). Characteristics of these experimental units are more similar within the strata than across the strata.  
+Cluster Sampling - Natural groups of the experimental units are made before the data is collected from the units.  
+Systematic Sampling - Involves only selecting the n^th^ element from a list of the experimental units.
+
+## Question 5
+```{r}
+mtbe <- read.csv('MTBE.csv')
+ind = sample(1:223, 5, replace = FALSE)
+mtbe[ind,]
+```
+
+### a) Additional Questions
+
+#### i) Remove all rows in mtbe that contain one or more NA
+```{r}
+mtbeo = na.omit(mtbe)
+```
+
+#### ii) Calculate the standard deviation of the depth of wells with aquifier Bedrock
+```{r}
+sd(mtbeo[mtbeo$Aquifier == 'Bedrock',]$Depth)
+```
+
+## Question 6
+```{r}
+eq <- read.csv('EARTHQUAKE.csv')
+ind2 = sample(1:2929, 30, replace = FALSE)
+eq[ind2,]
+```
+
+### a) Additonal Questions
+
+#### i) Plot
+```{r}
+plot(ts(eq$MAGNITUDE))
+```
+
+#### ii) Find the median of the MAGNITUDE variable
+```{r}
+median(eq$MAGNITUDE)
+```

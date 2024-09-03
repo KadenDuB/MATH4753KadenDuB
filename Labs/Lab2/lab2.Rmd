@@ -85,7 +85,7 @@ length(mpg[abs(z)<2])/length(mpg)
 
 ### Does Chebyshev agree with the data?
 
-Chebyshev's theorem does not agree with the data, it provides a prediction much lower than the actual value.
+Chebyshev's theorem agrees with the data. Over 75% of the data is within 2 Standard Deviations.
 
 ### Use the emperical rule to predict the proportion of data within 2 standard deviations of the mean
 
