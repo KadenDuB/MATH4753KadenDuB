@@ -9,7 +9,7 @@ output:
 ---
 
 ## Questions Completed
-I have completed 5/15 questions
+I have completed 14/15 questions
 
 ## Question 1
 4 Assignments of equal value = 15% of grade  
@@ -119,4 +119,150 @@ plot(ts(eq$MAGNITUDE))
 #### ii) Find the median of the MAGNITUDE variable
 ```{r}
 median(eq$MAGNITUDE)
+```
+
+## Question 7
+
+### a) What is the data collection method?
+The data collection method is a designed experiment using a stratified sample.
+
+### b) What is the population?
+The population is all the fish in the Tennessee River and its tributaries.
+
+### c) What are the qualitative variables?
+The qualitative variables are: River and Species
+
+## Question 8
+
+### a) What type of graph is used to show the data?
+The data is shown in a bar graph.
+
+### b) Identify the variable measured for each of the 106 robot types.
+The type of their robotic limbs.
+
+### c) Which social robot design is used the most?
+Robots that only have legs are the most used.
+
+### d) Compute class relative frequencies.
+```{r}
+freq=c(15,8,63,20)
+RL=c("None","Both","LegsO","WheelsO")
+l=rep(RL, freq)
+```
+
+### e) Construct a Pareto diagram for the data.
+```{r}
+source('pareto.r')
+pareto(l)
+```
+
+## Question 9
+
+### a) Construct a pie chart for the data.
+```{r}
+freq2=c(6,8,22,3,11)
+RL2=c("Denial of Service","Information Disclosure","Remote Code Execution","Spoofing","Priviledge Elevation")
+pie(freq2, labels = RL2)
+```
+
+### b) Construct a pareto diagram for the data.
+```{r}
+l2=rep(RL2,freq2)
+pareto(l2)
+```
+
+## Question 10
+```{r}
+swd = read.csv("SWDEFECTS.csv", header=TRUE)
+library(plotrix)
+tab=table(swd$defect)
+rtab=tab/sum(tab)
+round(rtab, 2)
+pie3D(rtab, labels=list("OK", "Defective"), main="pie plot of SWD")
+```
+
+It is unlikely that the software will be defective.
+
+## Question 11
+```{r}
+```
+
+## Question 12
+```{r}
+pipes <- read.csv("ROUGHPIPE.csv")
+rough = pipes$ROUGH
+c(mean(rough)-2*sd(rough),mean(rough)+2*sd(rough))
+```
+
+## Question 13
+### a) Find the mean, median, and mode of the data
+```{r}
+ants <- read.csv("GOBIANTS.csv")
+mean(ants$AntSpecies)
+median(ants$AntSpecies)
+sortedSpecies = sort(table(ants$AntSpecies), decreasing = TRUE)
+names(sortedSpecies)[1]
+```
+The average number of ant species found at a site was 12.8182 
+The middle amount of ant species found at the sites was 5. This means about half the sites were above 5 and half the sites were less than 5.  
+The most common number of ant species to find at a site was 4.
+
+### b) The measure of central tendency that I would use is the median. This technique is less affected by outliers because if there are some below and some above it will still come out to about the same answer.
+
+### c) Find mean median and mode for only Dry Steppe
+```{r}
+dryPlants = ants[ants$PlantCov & ants$Region=="Dry Steppe",] 
+mean(dryPlants$PlantCov)
+median(dryPlants$PlantCov)
+sorteddryPlants = sort(table(dryPlants$PlantCov), decreasing = TRUE)
+names(sorteddryPlants)[1]
+```
+
+### d) Find mean median and mode for only Gobi Desert
+```{r}
+gobiPlants = ants[ants$PlantCov & ants$Region=="Gobi Desert",] 
+mean(gobiPlants$PlantCov)
+median(gobiPlants$PlantCov)
+sortedgobiPlants = sort(table(gobiPlants$PlantCov), decreasing = TRUE)
+names(sortedgobiPlants)[1]
+```
+
+### e) Does the total plant cover appear to be different at the two regions?
+Yes. There is much more plant cover in the Dry Steppe.
+
+
+## Question 14
+
+### a) Use a graphical method to describe the velocity distribution of galaxy cluster A1775
+```{r}
+galaxy2 = read.csv("GALAXY2.csv")
+
+hist(galaxy2$VELOCITY, col=rainbow(7), xlab="Velocity (km/s)", main="Histogram of Velocities")
+```
+
+
+### b) Is there evidence to support the double cluster theory?
+Yes the histogram shows evidence of the double cluster theory. There are two main spikes around 19000km/s and 22000km/s.
+
+### c) Calculate numerical descriptive measures for galaxy velocities in cluster A1775.
+```{r}
+galaxy2A <- subset(galaxy2, subset=galaxy2$VELOCITY<=21500)
+galaxy2B <- subset(galaxy2, subset=galaxy2$VELOCITY>21500)
+
+mean(galaxy2A$VELOCITY)
+sd(galaxy2A$VELOCITY)
+mean(galaxy2B$VELOCITY)
+sd(galaxy2B$VELOCITY)
+```
+
+### d)Suppose you observe a galaxy velocity of 20,000 km/s. Is this galaxy likely to belong cluster A1775A or A1775B?
+The galaxy moving at 20000km/s is more likely to be in cluster galaxy2A because it is closer to the mean value of velocities and is within the standard deviation.
+
+## Question 15
+```{r}
+ddt=read.csv("DDT.csv")
+
+library(ggplot2)
+ggplot(ddt, aes(x = RIVER, y= LENGTH, fill=SPECIES)) + geom_boxplot() + ggtitle('Kaden DuBois')
+```
 ```
