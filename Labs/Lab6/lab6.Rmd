@@ -1,0 +1,329 @@
+---
+title: "Lab 6"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tasks
+## Task 1: Working Directory
+```{r}
+getwd()
+```
+
+## Task 2: Normal Curves and Probablilites
+### Graph Curves
+```{r}
+layout(matrix(1:4, nr = 2, nc = 2))
+#M=10, SD=4
+curve(dnorm(x, mean = 10, sd = 4), xlim = c(10 - 3 * 4, 10 + 3 * 4))
+#M=10, SD=2
+curve(dnorm(x, mean = 10, sd = 2), xlim = c(10 - 3 * 2, 10 + 3 * 2))
+#M=5, SD=10
+curve(dnorm(x, mean = 5, sd = 10), xlim = c(5 - 3 * 10, 5 + 3 * 10))
+#M=5, SD=0.5
+curve(dnorm(x, mean = 5, sd = 0.5), xlim = c(5 - 3 * 0.5, 5 + 3 * 0.5))
+```
+
+### Graph Probabilities
+```{r}
+# 	Y∼N(0,1),P(Y≥2)
+curve(dnorm(x, mean = 0, sd = 1), xlim = c(0 - 3 * 1, 0 + 3 * 1))
+xcurve1 = seq(2, 5, length = 1000)
+ycurve1 = dnorm(xcurve1, mean = 0, sd = 1)
+
+polygon(c(2, xcurve1, 5), c(0, ycurve1, 0), col = "Red")
+area = pnorm(5, mean = 0, sd = 1) - pnorm(2, mean = 0, sd = 1)
+area = round(area, 4)
+
+text(x = 2.5, y = 0.075, paste("Area= ", area, sep = " "))
+```
+
+```{r}
+# Y∼N(μ=4,σ=2),P(1≤Y<5)
+curve(dnorm(x, mean = 4, sd = 2), xlim = c(4 - 3 * 2, 4 + 3 * 2))
+xcurve2 = seq(1, 5, length = 1000)
+ycurve2 = dnorm(xcurve2, mean = 4, sd = 2)
+
+polygon(c(1, xcurve2, 5), c(0, ycurve2, 0), col = "Red")
+area2 = pnorm(5, mean = 4, sd = 2) - pnorm(1, mean = 4, sd = 2)
+area2 = round(area2, 4)
+
+text(x = 0, y = 0.125, paste("Area= ", area2, sep = " "))
+```
+
+```{r}
+# 	Y∼N(μ=10,σ=4),P(Y<10)
+curve(dnorm(x, mean = 10, sd = 4), xlim = c(10 - 3 * 4, 10 + 3 * 4))
+xcurve3 = seq(-2, 10, length = 1000)
+ycurve3 = dnorm(xcurve3, mean = 10, sd = 4)
+
+polygon(c(-2, xcurve3, 10), c(0, ycurve3, 0), col = "Red")
+area3 = pnorm(10, mean = 10, sd = 4)
+area3 = round(area3, 4)
+
+text(x = 2, y = 0.05, paste("Area= ", area3, sep = " "))
+```
+
+```{r}
+# 	Y∼N(μ=-2,σ=1/2),P(-3<Y≤ -2)
+curve(dnorm(x, mean = -2, sd = 0.5), xlim = c(-2 - 3 * 0.5, -2 + 3 * 0.5))
+xcurve4 = seq(-3, -2, length = 1000)
+ycurve4 = dnorm(xcurve4, mean = -2, sd = 0.5)
+
+polygon(c(-3, xcurve4, -2), c(0, ycurve4, 0), col = "Red")
+area4 = pnorm(-2, mean = -2, sd = 0.5) - pnorm(-3, mean = -2, sd = 0.5)
+area4 = round(area4, 4)
+
+text(x = -3.25, y = 0.3, paste("Area= ", area4, sep = " "))
+```
+
+## Task 3: Gamma Curves and Probabilities
+### Graph Curves
+```{r}
+# 	Y∼Gamma(shape=1,scale=1)
+curve(dgamma(x,shape = 1, scale = 1), xlim = c(0,10), ylim = c(0,1),
+      col = "Blue", lwd = 2, ylab = "Gamma Density", main = "beta = 1")
+text(x = 1.2, y = 0.7, paste("alpha =", 1, sep=" "))
+
+# 	Y∼Gamma(shape=3,scale=1)
+curve(dgamma(x,shape = 3, scale = 1), xlim = c(0,10), ylim = c(0,1),
+      col = "Red", lwd = 2, add = TRUE)
+text(x = 2.3, y = 0.35, paste("alpha =", 3, sep=" "))
+
+# 	Y∼Gamma(shape=5,scale=1)
+curve(dgamma(x,shape = 5, scale = 1), xlim = c(0,10), ylim = c(0,1),
+      col = "Green", lwd = 2, add = TRUE)
+text(x = 5, y = 0.275, paste("alpha =", 5, sep = " "))
+```
+
+### Graph Probabilities
+```{r}
+# 	Y~Gamma(shape=3,scale=2),P(2<Y<5)
+curve(dgamma(x, shape = 3, scale = 2), xlim = c(0,10), ylim = c(0, 0.3),
+      lwd = 2, ylab = "Gamma Density", xlab = "Y", main = "Gamma Distribution: Shape = 3, Scale = 2")
+
+xgam1 = seq(2, 5, length = 1000)
+ygam1 = dgamma(xgam1, shape = 3, scale = 2)
+polygon(c(2, xgam1, 5), c(0, ygam1, 0), col = "Pink")
+
+gprob1 = pgamma(5, shape = 3, scale = 2) - pgamma(2, shape = 3, scale = 2)
+gprob1 = round(gprob1, 4)
+
+text(x = 3.75, y = 0.15, paste("P(2<Y<5) =", gprob1, sep = " "))
+```
+
+```{r}
+#   Y∼Gamma(shape=6,scale=3),P(1≤Y≤4)
+curve(dgamma(x, shape = 6, scale = 3), xlim = c(0,30), ylim = c(0, 0.06),
+      lwd = 2, ylab = "Gamma Density", xlab = "Y", main = "Gamma Distribution: Shape = 6, Scale = 3")
+
+xgam2 = seq(1, 4, length = 1000)
+ygam2 = dgamma(xgam2, shape = 6, scale = 3)
+polygon(c(1, xgam2, 4), c(0, ygam2, 0), col = "Pink")
+
+gprob2 = pgamma(4, shape = 6, scale = 3) - pgamma(1, shape = 6, scale = 3)
+gprob2 = round(gprob2, 4)
+
+text(x = 2.3, y = 0.01, paste("P =", gprob2, sep = " "))
+```
+
+```{r}
+#   Y∼Gamma(shape=2,scale=4),P(3≤Y<6)
+curve(dgamma(x, shape = 2, scale = 4), xlim = c(0,30), ylim = c(0, 0.1),
+      lwd = 2, ylab = "Gamma Density", xlab = "Y", main = "Gamma Distribution: Shape = 2, Scale = 4")
+
+xgam3 = seq(3, 6, length = 1000)
+ygam3 = dgamma(xgam3, shape = 2, scale = 4)
+polygon(c(3, xgam3, 6), c(0, ygam3, 0), col = "Pink")
+
+gprob3 = pgamma(6, shape = 2, scale = 4) - pgamma(3, shape = 2, scale = 4)
+gprob3 = round(gprob3, 4)
+
+text(x = 10, y = 0.09, paste("P =", gprob3, sep = " "))
+```
+
+## Task 4: Chi-Square Distribution and Probabilities
+### Graph Chi-Square Curves
+```{r}
+layout(matrix(1:4, nr = 2, nc =2))
+# Y∼chisq(df=1)
+curve(dchisq(x, df = 1), xlim = c(0, 10), ylim = c(0, 1.5), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 1")
+
+# Y∼chisq(df=2)
+curve(dchisq(x, df = 2), xlim = c(0, 15), ylim = c(0, 0.75), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 2")
+# Y∼chisq(df=4)
+curve(dchisq(x, df = 4), xlim = c(0, 10), ylim = c(0, 0.5), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 4")
+# Y∼chisq(df=20)
+curve(dchisq(x, df = 20), xlim = c(0, 50), ylim = c(0, 0.075), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 20")
+```
+
+### Graph Probabilities
+```{r}
+# 	Y∼chisq(df=2),P(2≤Y≤4)
+curve(dchisq(x, df = 2), xlim = c(0, 15), ylim = c(0, 0.75), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 2")
+
+xchi1 = seq(2, 4, length = 1000)
+ychi1 = dchisq(xchi1, df = 2)
+polygon(c(2, xchi1, 4), c(0, ychi1, 0), col = "Light Blue")
+
+cprob1 = pchisq(4, df = 2) - pchisq(2, df = 2)
+cprob1 = round(cprob1, 4)
+
+text(x = 3.5, y = 0.25, paste("P =", cprob1, sep = " "))
+```
+
+```{r}
+# 	Y∼chisq(df=3),P(3≤Y≤5)
+curve(dchisq(x, df = 3), xlim = c(0, 15), ylim = c(0, 0.75), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 3")
+
+xchi2 = seq(3, 5, length = 1000)
+ychi2 = dchisq(xchi2, df = 3)
+polygon(c(3, xchi2, 5), c(0, ychi2, 0), col = "Light Blue")
+
+cprob2 = pchisq(5, df = 3) - pchisq(3, df = 3)
+cprob2 = round(cprob2, 4)
+
+text(x = 4.5, y = 0.2, paste("P =", cprob2, sep = " "))
+```
+
+```{r}
+#   Y∼chisq(df=20),P(10<Y≤21)
+curve(dchisq(x, df = 20), xlim = c(0, 50), ylim = c(0, 0.075), lwd = 2,
+      ylab = "Chi-Square Density", xlab = "Y", main = "Degrees of Freedom = 20")
+
+xchi3 = seq(10, 21, length = 1000)
+ychi3 = dchisq(xchi3, df = 20)
+polygon(c(10, xchi3, 21), c(0, ychi3, 0), col = "Light Blue")
+
+cprob3 = pchisq(21, df = 20) - pchisq(10, df = 20)
+cprob3 = round(cprob3, 4)
+
+text(x = 9, y = 0.05, paste("P =", cprob3, sep = " "))
+```
+
+## Task 5: Weibull Distribution and Probabilites
+### Graph Distributions
+```{r}
+layout(matrix(1:4, nr = 2, nc = 2))
+curve(dweibull(x, shape = 1, scale = 1), xlim = c(0, 10), ylim = c(0, 1), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 1, Scale = 1")
+
+curve(dweibull(x, shape = 10, scale = 3), xlim = c(0, 10), ylim = c(0, 2), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 10, Scale = 3")
+
+curve(dweibull(x, shape = 22, scale = 16), xlim = c(0, 20), ylim = c(0, 1), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 22, Scale = 16")
+
+curve(dweibull(x, shape = 1000, scale = 100), xlim = c(0, 120), ylim = c(0, 0.2), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 1000, Scale = 100")
+```
+
+### Graph Probabilities
+```{r}
+#   weibull(shape = 10, scale = 3), P(2,3)
+curve(dweibull(x, shape = 10, scale = 3), xlim = c(0, 10), ylim = c(0, 2), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 10, Scale = 3")
+xwei1 = seq(2, 3, length = 1000)
+ywei1 = dweibull(xwei1, shape = 10, scale = 3)
+polygon(c(2, xwei1, 3), c(0, ywei1, 0), col = "Dark Red")
+
+wprob1 = pweibull(3, shape = 10, scale = 3) - pweibull(2, shape = 10, scale = 3)
+wprob1 = round(wprob1, 4)
+
+text(x = 1.75, y = 0.8, paste("P = ", wprob1, sep = " "))
+```
+
+```{r}
+#   weibull(shape = 1, scale = 1), P(1,3)
+curve(dweibull(x, shape = 1, scale = 1), xlim = c(0, 10), ylim = c(0, 1), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 1, Scale = 1")
+xwei2 = seq(1, 3, length = 1000)
+ywei2 = dweibull(xwei2, shape = 1, scale = 1)
+polygon(c(1, xwei2, 3), c(0, ywei2, 0), col = "Dark Red")
+
+wprob2 = pweibull(3, shape = 1, scale = 1) - pweibull(1, shape = 1, scale = 1)
+wprob2 = round(wprob2, 4)
+
+text(x = 2, y = 0.4, paste("P = ", wprob2, sep = " "))
+```
+
+```{r}
+#   weibull(shape = 22, scale = 16), P(16,18)
+curve(dweibull(x, shape = 22, scale = 16), xlim = c(0, 20), ylim = c(0, 1), lwd = 2,
+      ylab = "Weibull Density", xlab = "Y", main = "Shape = 22, Scale = 16")
+xwei3 = seq(16, 18, length = 1000)
+ywei3 = dweibull(xwei3, shape = 22, scale = 16)
+polygon(c(16, xwei3, 18), c(0, ywei3, 0), col = "Dark Red")
+
+wprob3 = pweibull(18, shape = 22, scale = 16) - pweibull(16, shape = 22, scale = 16)
+wprob3 = round(wprob3, 4)
+
+text(x = 19, y = 0.4, paste("P = ", wprob3, sep = " "))
+```
+
+## Task 6: Beta Distributions and Probabilites
+### Graph Distributions
+```{r}
+layout(matrix(1:4, nr = 2, nc = 2))
+curve(dbeta(x, shape1 = 1, shape2 = 2), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 1, S2 = 2")
+curve(dbeta(x, shape1 = 3, shape2 = 5), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 3, S2 = 5")
+curve(dbeta(x, shape1 = 10, shape2 = 2), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 10, S2 = 2")
+curve(dbeta(x, shape1 = 1, shape2 = 20), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 1, S2 = 20")
+```
+
+### Graph Probabilities
+```{r}
+# P(0.2, 0.4)
+curve(dbeta(x, shape1 = 1, shape2 = 2), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 1, S2 = 2")
+
+xbet1 = seq(0.2, 0.4, length = 1000)
+ybet1 = dbeta(xbet1, shape1 = 1, shape2 = 2)
+polygon(c(0.2, xbet1, 0.4), c(0, ybet1, 0), col = "Orange")
+
+pbeta1 = pbeta(0.4, shape1 = 1, shape2 = 2) - pbeta(0.2, shape1 = 1, shape2 = 2)
+pbeta1 = round(pbeta1, 4)
+
+text(x = 0.42, y = 1.5, paste("P =", pbeta1, sep = " "))
+```
+
+```{r}
+# P(0.2, 0.4)
+curve(dbeta(x, shape1 = 3, shape2 = 5), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 1, S2 = 2")
+
+xbet2 = seq(0.2, 0.4, length = 1000)
+ybet2 = dbeta(xbet2, shape1 = 3, shape2 = 5)
+polygon(c(0.2, xbet2, 0.4), c(0, ybet2, 0), col = "Orange")
+
+pbeta2 = pbeta(0.4, shape1 = 3, shape2 = 5) - pbeta(0.2, shape1 = 3, shape2 = 5)
+pbeta2 = round(pbeta2, 4)
+
+text(x = 0.075, y = 2, paste("P =", pbeta2, sep = " "))
+```
+
+```{r}
+# P(0.2, 0.4)
+curve(dbeta(x, shape1 = 10, shape2 = 2), xlim  = c(0,1), lwd = 2, ylab = "Beta Density", xlab = "Y", main = "S1 = 10, S2 = 2")
+
+xbet3 = seq(0.6, 0.8, length = 1000)
+ybet3 = dbeta(xbet3, shape1 = 10, shape2 = 2)
+polygon(c(0.6, xbet3, 0.8), c(0, ybet3, 0), col = "Orange")
+
+pbeta3 = pbeta(0.8, shape1 = 10, shape2 = 2) - pbeta(0.6, shape1 = 10, shape2 = 2)
+pbeta3 = round(pbeta3, 4)
+
+text(x = 0.59, y = 2, paste("P =", pbeta3, sep = " "))
+```

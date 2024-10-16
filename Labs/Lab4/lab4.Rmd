@@ -1,0 +1,132 @@
+---
+title: "Lab4"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+# Tasks
+## Task 1
+```{r}
+getwd()
+```
+
+## Task 2
+```{r}
+spruce.df <- read.csv('SPRUCE.csv')
+tail(spruce.df)
+```
+
+## Task 3
+### Lowess Smooth Scatter Plot
+```{r}
+library(s20x)
+trendscatter(Height~BHDiameter,f=0.5,data=spruce.df)
+```
+
+### Make Lineaer Model Object
+```{r}
+spruce.lm=with(spruce.df,lm(Height~BHDiameter))
+```
+
+### Find the Residuals and Fitted Values
+```{r}
+height.res=residuals(spruce.lm)
+height.fit=fitted(spruce.lm)
+```
+
+### Plot the Residuals vs Fitted 
+```{r}
+plot(height.fit,height.res)
+```
+
+### Plot the Residuals vs Fitted with a Lowess Smooth Scatter Plot
+```{r}
+trendscatter(height.fit,height.res)
+```
+
+### Analyze and Compare Plots
+The plot of the residuals vs the fitted shows a mound type curve. The original trend scatter plot shows a line that continuously increases throughout the plot.
+
+### Make the Residual plot
+```{r}
+plot(spruce.lm, which=1)
+```
+
+### Check Normality
+```{r}
+normcheck(spruce.lm,shapiro.wilk = TRUE)
+```
+
+### What is the P-value in the Shapiro-Wilks test? What is the NULL hypothesis?
+The P-value from this Shapiro-Wilks test is 0.29. The NULL hypothesis is that the data is distributed normally.
+
+## Task 4
+### Fit a quadratic to the points
+```{r}
+quad.lm=lm(Height~BHDiameter + I(BHDiameter^2),data=spruce.df)
+```
+
+### Make a fresh Scatter plot and add the quadratic to it
+```{r}
+plot(Height~BHDiameter,bg="Blue",pch=21,cex=1.2,
+ylim=c(0,max(Height)),xlim=c(0,max(BHDiameter)), 
+main="Spruce height prediction",data=spruce.df)
+coef(quad.lm)
+myplot=function(x){
+ 0.86089580 +1.46959217*x  -0.02745726*x^2
+}
+curve(myplot, lwd=2, col="steelblue",add=TRUE)
+```
+
+### Make quad.fit, a vector of fitted values.
+```{r}
+quad.fit=fitted(quad.lm)
+```
+
+### Make a plot of the residuals vs fitted values.
+```{r}
+quad.res=residuals(quad.lm)
+plot(quad.fit, quad.res)
+``` 
+
+### Construct a QQ plot
+```{r}
+normcheck(quad.lm,shapiro.wilk = TRUE)
+```
+
+### What is the P-value of the test? What do you conclude?
+Te P-value of the test is 0.684. I conclude that the distribution is normal because the P-value is above 0.05.
+
+## Task 5
+### Summarize quad.lm
+```{r}
+summary(quad.lm)
+```
+
+### What is the value of B0?
+The value of B0 is 0.860896.
+
+### What is the value of B1?
+The value of B1 is 1.469592.
+
+### What is the value of B2?
+The value of B2 is -0.027457.
+
+### Make interval estimates for B0, B1, and B2
+```{r}
+ciReg(quad.lm)
+```
+
+### Write down the equation for the fitted line.
+$Y = 0.860896 + 1.469592x - 0.027457$
+
+### Predict the Height of spruce when the Diameter is 15, 18 and 20cm
+```{r}
+predict(quad.lm, data.frame(BHDiameter=c(15,18,20)))
+```
+
+### Compare to prior predictions.

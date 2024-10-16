@@ -1,0 +1,36 @@
+---
+title: "Lab1"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Tasks
+## Question Count
+I have completed 1/17 questions
+## Questions
+### Question 1
+#### a)
+The probability of an expert to fail the match is 7.88%
+
+#### b)
+The probability of a novice to fail the match is 25.45%
+
+#### c)
+The failing participant is more likely to be a novice.
+
+### Question 2
+#### a)
+The probability that a test will be positive if an athlete is a user is 50%
+
+#### b)
+The probability that a test will be negative if an athlete is a non-user is 1%
+
+#### c)
+
