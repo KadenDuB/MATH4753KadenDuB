@@ -1,0 +1,377 @@
+---
+title: "Assignment 3"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Completed Questions
+I have completed 12/16 Questions
+
+# Questions
+
+## Q1
+### a)
+```{r}
+# Given Parameters
+mean_interval = 95
+lambda = 1 / mean_interval
+time = 120
+
+# Find the probability of an interval time >= 120
+probability <- pexp(time, rate = lambda, lower.tail = FALSE)
+probability
+```
+
+### b)
+```{r}
+# Load given dataset
+phishing_data <- read.csv('PHISHING.csv')
+
+# Calculate sample mean and standard deviation
+sample_mean <- mean(phishing_data$INTTIME)
+sample_sd <- sd(phishing_data$INTTIME)
+
+# Show Results
+cat("Sample Mean:", sample_mean, "\n")
+cat("Sample Standard Deviation:", sample_sd, "\n")
+
+# Theoretical values
+theoretical_mean <- mean_interval
+theoretical_sd <- mean_interval
+
+# Show Results
+cat("Theoretical Mean:", theoretical_mean, "\n")
+cat("Theoretical Standard Deviation:", theoretical_sd, "\n")
+```
+
+The calculated mean from the data and the theoretical mean given in the problem are approximately the same. Therefore, the data does appear to follow an exponential distribution with the mean = 95.
+
+## Q2
+### a) 
+The mean for a gamma distribution is shape * scale. This means that the mean will be:  
+$α * β = 3 * 0.07 = 0.21$  
+
+The variance for a gamma distribution is shape* scale^2. This means that the variance will be:  
+$α * β^2 = 3 * 0.07^2 = 3 * 0.0049 = 0.0147$  
+
+### b)
+After calculating mean +- 3variance we get:  
+$mean + 3variance = 0.21 + 3(0.1213) = 0.57$  
+$mean - 3variance = 0.21 - 3(0.1213) = 0.17$  
+
+This means that seeing a flood rate of 0.60 is not completely out of the ordinary, but we would expect a value somewhere inbetween 0.17 and 0.57.
+
+## Q3
+### a)
+The mean for gamma distribution is given by shape * scale:  
+Equation 1: $mean = α * β = 2 * 2 = 4$  
+Equation 2: $mean = α * β = 1 * 4 = 4$  
+Even thought the two equations are different, they give the same mean.
+
+### b)
+The variance for gamma distribution is given by shape * scale^2  
+Equation 1: $variance^2 = α * β^2 = 2 * 2^2 = 8$  
+Equation 2: $variance^2 = α * β^2 = 1 * 4^2 = 16$  
+Unlike the mean, the variances for the two equations are different  
+
+### c) 
+```{r}
+# Calculate probabilities
+prob_A <- pgamma(1, shape = 2, scale = 2)
+prob_B <- pgamma(1, shape = 1, scale = 4)
+
+# Display results
+cat("Probability of reaction in less than 1 minute for Formula A:", prob_A, "\n")
+cat("Probability of reaction in less than 1 minute for Formula B:", prob_B, "\n")
+```
+
+From the given calculation, it is more likely that equation 2 will cause a reaction in less than 1 minute.
+
+## Q4
+### a)
+```{r}
+# Calculate probability P(Y <= 2)
+pweibull(2, shape = 2, scale = 4)
+```
+Therefore the probability that a washing machine will need a repair in under 2 years is %22.11
+
+### b)
+```{r}
+# mean
+mean = 2 * gamma(1.5)
+mean
+
+# variance
+variance = 2 * sqrt((gamma(2) - (gamma(1.5)^2)))
+variance
+```
+
+### c)
+```{r}
+#P(mu - 2sig)
+p1 = mean - 2 * variance
+
+#P(mu + 2sig)
+p2 = mean + 2 * variance
+
+c(p1, p2)
+```
+
+### d)
+```{r}
+# P < 6
+under6 = pweibull(6, shape = 2, scale = 4)
+
+# P > 6
+1 - under6
+```
+
+The probability that the washing machine wont need a repair until over 6 years is %10.54.
+
+## Q5
+### a)
+The equation for the mean is α/α + β. This means that the mean will be:  
+```{r}
+alpha = 2
+beta = 9
+
+alpha/(alpha + beta)
+```
+
+The equation for the variance in αβ/(α + β)^2(α + β + 1). This means that the variance will be:  
+```{r}
+(alpha * beta)/((alpha + beta)^2 * (alpha + beta + 1))
+```
+
+### b)
+```{r}
+# P >= 0.4
+1 - pbeta(0.4, alpha, beta)
+```
+
+Therefore, the probability of at least 40% of the hardware repair budget being used on laser color printer in any given year is 4.63%.
+
+### c)
+```{r}
+pbeta(0.1, alpha, beta)
+```
+
+Therefore, the probability of at most 10% of the hardware repair budget being used on the laser color printer in any given year is 26.39%
+
+## Q6
+### a)
+Finding alpha is a simple task. By using the exponent for y in the probability density function, we can come to the conclusion that alpha - 1 = 1, this means that alpha must be equal to 2.  
+
+Since we know that alpha = 2, finding beta is simple. By solving the proportion (1/8) = (2/x) we find that beta = 16.  
+
+Therefore, alpha = 2, beta = 16
+
+### b)
+Using the given equations:
+```{r}
+alpha = 2
+beta = 16
+
+mean = beta^(1/alpha) * gamma((alpha + 1) / alpha)
+mean
+
+variance = beta^(2/alpha) * ((gamma((alpha + 2)/alpha)) - (gamma((alpha + 1) / alpha))^2)
+variance
+```
+
+### c)
+Using the given Integral and Equation:
+```{r}
+integrand <- function(y) {
+  (1/8)* y * exp((-y^2)/16)
+}
+
+integral = integrate(integrand, 0, 6)
+
+1 - integral$value
+```
+
+## Q7
+### a) 
+Using the given equations:  
+$P(X = x) = 1/6$  
+$P(Y = y) = 1/6$  
+Therefore, $P(x,y) = 1/6 * 1/6 = 1/36$  
+
+### b)
+$p_1(x) = 6 * 1 / 36 = 6 / 36 = 1/6$  
+$p_2(y) = 6 * 1 / 36 = 6 / 36 = 1/6$  
+
+### c)
+$p_1(x|y) = p(x,y)/p_2(y) = (1/36)/(1/6) = 1/6$  
+$p_1(y|x) = p(x,y)/p_1(x) = (1/36)/(1/6) = 1/6$  
+
+### d)
+All of the probibilites are the same. This means that the outcome of one dice does not affect the outcome of the other, meaning that they are independent.  
+
+## Q8
+### a) 
+Total number = 7
+(3,1) = 1  
+P(X = 3, Y = 1): 1/7  
+
+(1,1) = 1  
+P(X = 1, Y = 1): 1/7  
+
+(3,3) = 1  
+P(X = 3, Y = 3): 1/7  
+
+(2,1) = 2  
+P(X = 2, Y = 1): 2/7  
+
+(3,2) = 2  
+P(X = 3, Y = 2): 2/7  
+
+### b)
+P(X = 3): 4/7  
+
+P(X = 2): 2/7  
+
+P(X = 1): 1/7  
+
+### c)
+P(Y = 3): 1/7  
+
+P(Y = 2): 2/7  
+
+P(Y = 1): 4/7  
+
+### d)
+$P(Y = 1 | X = 3) = P(3,1)/P(X = 3) = (1/7)/(4/7) = (1/4)$  
+$P(Y = 2 | X = 3) = P(3,2)/P(X = 3) = (2/7)/(4/7) = (1/2)$  
+$P(Y = 3 | X = 3) = P(3,3)/P(X = 3) = (1/7)/(4/7) = (1/4)$  
+
+P(Y = 1, X = 1) = 1 Because Y = 1 is the only possible outcome when X = 1  
+P(Y = 1, X = 2) = 1 Because Y = 1 is the only possible outcome when X = 2  
+
+## Q9
+### a) 
+Since there is no x value, the function will be the original function multuplied by (2y - y) = y  
+This means that the marginal density function will be the original without the y in the denominator since it is being cancelled out by the integration.  
+
+### b)
+```{r}
+# Define the rate parameter for the exponential distribution
+lambda <- 1 / 10
+
+# Calculate the mean of Y
+mean_Y <- 1 / lambda
+mean_Y
+```
+
+## Q10 
+
+## Q11
+We can use R to compute the probabilites and run a test to see if each of the values is independent.
+```{r}
+# Define the values and joint probabilities
+X_vals <- c(-1, 0, 1)
+Y_vals <- c(-1, 0, 1)
+
+# Joint probability table as a matrix
+joint_probs <- matrix(c(1/12, 2/12, 1/12,
+                        1/12, 2/12, 1/12,
+                        1/12, 2/12, 1/12), 
+                      nrow = 3, byrow = TRUE)
+
+# Calculate marginal distributions
+P_X <- rowSums(joint_probs)
+P_Y <- colSums(joint_probs)
+
+# Calculate E[X] and E[Y]
+E_X <- sum(X_vals * P_X)
+E_Y <- sum(Y_vals * P_Y)
+
+# Calculate E[XY]
+E_XY <- sum(outer(X_vals, Y_vals, "*") * joint_probs)
+
+# Calculate Cov(X, Y)
+cov_XY <- E_XY - (E_X * E_Y)
+cov_XY
+
+# Check for independence by comparing P(X = x, Y = y) with P(X = x) * P(Y = y)
+independence_check <- matrix(0, nrow = 3, ncol = 3)
+for (i in 1:3) {
+  for (j in 1:3) {
+    independence_check[i, j] <- joint_probs[i, j] == P_X[i] * P_Y[j]
+  }
+}
+
+# Display results
+independence_check
+```
+
+## Q12
+### a)
+E(Y) = (a + b) / 2 = (1 + 3) / 2 = 4/2 = 2
+
+### b)
+Var(Y) = (b - a)^2 / 12 = (3 - 1)^2/12 = 1/3  
+Var(Ybar) = (Var(Y))/n = (1/3)/60 = 1/180
+
+### c)
+By the CLT using n = 60, the distribution should be approximately normal.  
+
+### d)
+```{r}
+# Given values
+mean_Y <- 2
+var_Y <- 0.00556
+sd_Y <- sqrt(var_Y)
+
+# Prob
+prob_d <- pnorm(2.5, mean = mean_Y, sd = sd_Y) - pnorm(1.5, mean = mean_Y, sd = sd_Y)
+prob_d
+```
+
+### e)
+```{r}
+prob_e <- pnorm(2.2, mean = mean_Y, sd = sd_Y)
+prob_e
+```
+
+## Q13
+### a)
+```{r}
+# Given values
+n <- 20
+p <- 0.4
+mean_X <- n * p
+var_X <- n * p * (1 - p)
+sd_X <- sqrt(var_X)
+
+z_a <- (1.5 - mean_X) / sd_X
+prob_a_normal <- pnorm(z_a)
+cat("Normal Approximation: P(X < 2) ≈", round(prob_a_normal, 4), "\n")
+```
+
+### b)
+```{r}
+z_b <- (10.5 - mean_X) / sd_X
+prob_b_normal <- 1 - pnorm(z_b)
+cat("Normal Approximation: P(X > 10) ≈", round(prob_b_normal, 4), "\n")
+```
+
+### c)
+```{r}
+prob_a_exact <- pbinom(1, size = n, prob = p)
+cat("Exact Probability: P(X < 2) =", round(prob_a_exact, 4), "\n")
+
+prob_b_exact <- 1 - pbinom(10, size = n, prob = p)
+cat("Exact Probability: P(X > 10) =", round(prob_b_exact, 4), "\n")
+```
+
+## Q14

@@ -1,0 +1,206 @@
+---
+title: "Lab 8"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Tasks
+
+## Task 1: Working Directory
+```{r}
+getwd()
+```
+
+## Task 2: 
+### Sample Creation
+```{r}
+sample = runif(10, 0, 5)
+sample
+```
+
+### Mean and Variance of Population
+```{r}
+muPop = (0 + 5) / 2
+vPop = (5 - 0)^2 / 12
+c(muPop, vPop)
+```
+
+### Mean and Variance of Sample
+```{r}
+muSam = mean(sample)
+vSam = var(sample)
+c(muSam, vSam)
+```
+
+### Comparing Population and Sample
+The mean and variance of the sample is usually close to the mean and variance of the population, sometimes it is slightly larger or smaller.
+
+### myclt function
+```{r}
+myclt=function(n,iter){
+  y=runif(n*iter,0,5) # A
+  data=matrix(y,nr=n,nc=iter,byrow=TRUE) #B
+  sm=apply(data,2,sum) #C
+  hist(sm)
+  sm
+}
+# w=myclt(n=10,iter=10000) #D
+```
+
+### myclt explanation
+When line A is run, a sample is created with the size of n * iter  
+When line B is run, the sample is stored in a matrix with n rows and iter columns, breaking up the data.  
+When line C is run, the information in the columns is summed together  
+When line D is run, the function will run with n = 10 and iter = 10000 and a histogram of the sums will be created  
+
+### Example plot
+```{r}
+w = myclt(n = 10, iter = 10000)
+```
+
+### Mean and variance of w
+```{r}
+muW = mean(w)
+vW = var(w)
+c(muW, vW)
+```
+
+### Modify function to return mean rather than sum
+```{r}
+meanclt=function(n,iter){
+  y=runif(n*iter,0,5) # A
+  data=matrix(y,nr=n,nc=iter,byrow=TRUE) #B
+  m=apply(data,2,mean) #C
+  hist(m)
+  m
+}
+```
+
+### Run with same parameters as w
+```{r}
+m = meanclt(n = 10, iter = 10000)
+```
+
+### Mean and Variance of m
+```{r}
+muM = mean(m)
+vM = var(m)
+c(muM, vM)
+```
+
+## Task 3
+### cltu function
+```{r}
+mycltu=function(n,iter,a=0,b=10){
+## r-random sample from the uniform
+y=runif(n*iter,a,b)
+## Place these numbers into a matrix
+## The columns will correspond to the iteration and the rows will equal the sample size n
+data=matrix(y,nr=n,nc=iter,byrow=TRUE)
+## apply the function mean to the columns (2) of the matrix
+## these are placed in a vector w
+w=apply(data,2,mean)
+## We will make a histogram of the values in w
+## How high should we make y axis?
+## All the values used to make a histogram are placed in param (nothing is plotted yet)
+param=hist(w,plot=FALSE)
+## Since the histogram will be a density plot we will find the max density
+
+ymax=max(param$density)
+## To be on the safe side we will add 10% more to this
+ymax=1.1*ymax
+## Now we can make the histogram
+hist(w,freq=FALSE,  ylim=c(0,ymax), main=paste("Histogram of sample mean",
+"\n", "sample size= ",n,sep=""),xlab="Sample mean")
+## add a density curve made from the sample distribution
+lines(density(w),col="Blue",lwd=3) # add a density plot
+## Add a theoretical normal curve 
+curve(dnorm(x,mean=(a+b)/2,sd=(b-a)/(sqrt(12*n))),add=TRUE,col="Red",lty=2,lwd=3) # add a theoretical curve
+## Add the density from which the samples were taken
+curve(dunif(x,a,b),add=TRUE,lwd=4)
+
+}
+```
+
+### Explanation of function
+The 2 in the apply function will make it apply on the columns of the matrix.
+w is a vector of the mean of all the columns. Since there is iter columns then there are iter values in w. So if mycltu(n = 20, iter = 100000) is called, there will be 100000 values in w.
+
+### Plots
+```{r}
+mycltu(n=1, iter=10000, a=0,b=10)
+mycltu(n=2, iter=10000, a=0,b=10)
+mycltu(n=3, iter=10000, a=0,b=10)
+mycltu(n=5, iter=10000, a=0,b=10)
+mycltu(n=10, iter=10000, a=0,b=10)
+mycltu(n=30, iter=10000, a=0,b=10)
+```
+
+### Observation
+The higher the sample size, the more normal the distribution.
+
+## Task 4
+### cltb function
+```{r}
+mycltb=function(n,iter,p=0.5,...){
+
+## r-random sample from the Binomial
+y=rbinom(n*iter,size=n,prob=p)
+## Place these numbers into a matrix
+## The columns will correspond to the iteration and the rows will equal the sample size n
+data=matrix(y,nr=n,nc=iter,byrow=TRUE)
+## apply the function mean to the columns (2) of the matrix
+## these are placed in a vector w
+w=apply(data,2,mean)
+## We will make a histogram of the values in w
+## How high should we make y axis?
+## All the values used to make a histogram are placed in param (nothing is plotted yet)
+param=hist(w,plot=FALSE)
+## Since the histogram will be a density plot we will find the max density
+
+ymax=max(param$density)
+## To be on the safe side we will add 10% more to this
+ymax=1.1*ymax
+
+## Now we can make the histogram
+## freq=FALSE means take a density
+hist(w,freq=FALSE,  ylim=c(0,ymax),
+main=paste("Histogram of sample mean","\n", "sample size= ",n,sep=""),
+xlab="Sample mean",...)
+## add a density curve made from the sample distribution
+#lines(density(w),col="Blue",lwd=3) # add a density plot
+## Add a theoretical normal curve 
+curve(dnorm(x,mean=n*p,sd=sqrt(p*(1-p))),add=TRUE,col="Red",lty=2,lwd=3) 
+}
+```
+
+### Plots
+```{r}
+mycltb(n=4,iter=10000,p=0.3)
+mycltb(n=5,iter=10000,p=0.3)
+mycltb(n=10,iter=10000,p=0.3)
+mycltb(n=20,iter=10000,p=0.3)
+```
+
+### Plots with p=0.7
+```{r}
+mycltb(n=4,iter=10000,p=0.7)
+mycltb(n=5,iter=10000,p=0.7)
+mycltb(n=10,iter=10000,p=0.7)
+mycltb(n=20,iter=10000,p=0.7)
+```
+
+### Plots with p=0.5
+```{r}
+mycltb(n=4,iter=10000,p=0.5)
+mycltb(n=5,iter=10000,p=0.5)
+mycltb(n=10,iter=10000,p=0.5)
+mycltb(n=20,iter=10000,p=0.5)
+```

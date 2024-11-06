@@ -1,0 +1,310 @@
+---
+title: "Lab 9"
+author: "Kaden DuBois"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tasks
+## Task 1: Working Directory
+```{r}
+getwd()
+```
+
+## Task 2: sample()
+### Line A and B explanation
+Line A: When Line A is executed, a sample is taken from the population of x with a size of n * iter. The parameters state that it will be sampled with replacement, so one value of x can be selected multiple times.  
+
+Line B: When Line B is executed, a confidence interval is created for the data in xstat. 
+
+### sample() explanation
+In the sample function, each value in x needs an equal probability of being selected in order to prevent bias in the created sample. This unbiassed approach allows x to more accurately represent the population of x.  
+
+### Unique Samples
+```{r}
+set.seed(35)
+sam = round(rnorm(20, mean = 10, sd = 4), 2)
+unique(sample(sam, 20 , replace = TRUE))
+unique(sample(sam, 20 , replace = TRUE))
+unique(sample(sam, 20 , replace = TRUE))
+unique(sample(sam, 20 , replace = TRUE))
+unique(sample(sam, 20 , replace = TRUE))
+```
+
+Not all of the samples are of the same length. The samples are also not completely unique as some data is repeated in two different instances. Also, when the code is run multiple times, the sample does not change at all.
+
+When sample(sam, 21, replace = FALSE) is run, there is an error. This is because the variable sam is only 20 entries long and we are trying to make a population that is 21 entries long. The only way that this would be possible is if replace = TRUE because then one entry can be picked multiple times.
+
+## Task 3: myboot()
+### The function
+```{r}
+myboot2<-function(iter=10000,x,fun="mean",alpha=0.05,cx=1.5,...){  #Notice where the ... is repeated in the code
+n=length(x)   #sample size
+
+y=sample(x,n*iter,replace=TRUE)
+rs.mat=matrix(y,nr=n,nc=iter,byrow=TRUE)
+xstat=apply(rs.mat,2,fun) # xstat is a vector and will have iter values in it 
+ci=quantile(xstat,c(alpha/2,1-alpha/2))# Nice way to form a confidence interval
+# A histogram follows
+# The object para will contain the parameters used to make the histogram
+para=hist(xstat,freq=FALSE,las=1,
+main=paste("Histogram of Bootstrap sample statistics","\n","alpha=",alpha," iter=",iter,sep=""),
+...)
+
+#mat will be a matrix that contains the data, this is done so that I can use apply()
+mat=matrix(x,nr=length(x),nc=1,byrow=TRUE)
+
+#pte is the point estimate
+#This uses whatever fun is
+pte=apply(mat,2,fun)
+abline(v=pte,lwd=3,col="Black")# Vertical line
+segments(ci[1],0,ci[2],0,lwd=4)      #Make the segment for the ci
+text(ci[1],0,paste("(",round(ci[1],2),sep=""),col="Red",cex=cx)
+text(ci[2],0,paste(round(ci[2],2),")",sep=""),col="Red",cex=cx)
+
+# plot the point estimate 1/2 way up the density
+text(pte,max(para$density)/2,round(pte,2),cex=cx)
+
+invisible(list(ci=ci,fun=fun,x=x))# Some output to use if necessary
+}
+```
+### Testing using different samples
+```{r}
+# A
+set.seed(39)
+sam = rnorm(25, mean = 25, sd = 10)
+myboot2(x = sam)
+
+# B
+set.seed(30)
+sam=rchisq(20, df = 3)
+myboot2(x = sam)
+
+# C
+set.seed(40)
+sam=rgamma(30, shape = 2, scale = 3)
+myboot2(x = sam)
+
+# D
+set.seed(10)
+sam=rbeta(20, shape1 = 3, shape2 = 4)
+myboot2(x = sam)
+```
+
+### Calculate the population mean
+
+### Testing different samples using alpha = 0.2
+```{r}
+set.seed(39)
+sam = rnorm(25, mean = 25, sd = 10)
+myboot2(x = sam, alpha = 0.2)
+
+# B
+set.seed(30)
+sam=rchisq(20, df = 3)
+myboot2(x = sam, alpha = 0.2)
+
+# C
+set.seed(40)
+sam=rgamma(30, shape = 2, scale = 3)
+myboot2(x = sam, alpha = 0.2)
+
+# D
+set.seed(10)
+sam=rbeta(20, shape1 = 3, shape2 = 4)
+myboot2(x = sam, alpha = 0.2)
+```
+
+## Task 4: Adjusted myboot()
+### The function
+```{r}
+myboot2<-function(iter=10000,x,fun="mean",alpha=0.05,cx=1.5,...){  #Notice where the ... is repeated in the code
+n=length(x)   #sample size
+
+y=sample(x,n*iter,replace=TRUE)
+rs.mat=matrix(y,nr=n,nc=iter,byrow=TRUE)
+xstat=apply(rs.mat,2,fun) # xstat is a vector and will have iter values in it 
+ci=quantile(xstat,c(alpha/2,1-alpha/2))# Nice way to form a confidence interval
+# A histogram follows
+# The object para will contain the parameters used to make the histogram
+para=hist(xstat,freq=FALSE,las=1,
+main=paste("Histogram of Bootstrap sample statistics","\n","alpha=",alpha," iter=",iter,sep=""),
+...)
+
+#mat will be a matrix that contains the data, this is done so that I can use apply()
+mat=matrix(x,nr=length(x),nc=1,byrow=TRUE)
+
+#pte is the point estimate
+#This uses whatever fun is
+pte=apply(mat,2,fun)
+abline(v=pte,lwd=3,col="Black")# Vertical line
+segments(ci[1],0,ci[2],0,lwd=4)      #Make the segment for the ci
+text(ci[1],0,paste("(",round(ci[1],2),sep=""),col="Red",cex=cx)
+text(ci[2],0,paste(round(ci[2],2),")",sep=""),col="Red",cex=cx)
+
+# plot the point estimate 1/2 way up the density
+text(pte,max(para$density)/2,round(pte,2),cex=cx)
+
+invisible(list(ci=ci,fun=fun,x=x, xstat = xstat))# Some output to use if necessary
+}
+```
+
+### New call and Bootstrap interval
+```{r}
+sam <- c(1,1,1,2,2,2,2,3,3,3,4,4)
+
+result = myboot2(x = sam, fun = "median")
+
+xstat = result$xstat
+
+barplot(xstat)
+
+# Bootstrap interval
+result$ci
+```
+
+## Task 5: 95% Interval Estimates
+### Function for mean(x)/median(x)
+```{r}
+mean_median_ratio <- function(x) {
+  mean(x) / median(x)
+}
+```
+
+### 95% intervals
+```{r}
+
+set.seed(39)
+sam = rnorm(25, mean = 25, sd = 10)
+A = myboot2(x = sam, alpha = 0.05, fun = mean_median_ratio)
+A$ci
+
+# B
+set.seed(30)
+sam=rchisq(20, df = 3)
+B = myboot2(x = sam, alpha = 0.05, fun = mean_median_ratio)
+B$ci
+
+# C
+set.seed(40)
+sam=rgamma(30, shape = 2, scale = 3)
+C = myboot2(x = sam, alpha = 0.05, fun = mean_median_ratio)
+C$ci
+
+# D
+set.seed(10)
+sam=rbeta(20, shape1 = 3, shape2 = 4)
+D = myboot2(x = sam, alpha = 0.05, fun = mean_median_ratio)
+D$ci
+```
+
+### 70% intervals
+```{r}
+set.seed(39)
+sam = rnorm(25, mean = 25, sd = 10)
+A70 = myboot2(x = sam, alpha = 0.3, fun = mean_median_ratio)
+A70$ci
+
+# B
+set.seed(30)
+sam=rchisq(20, df = 3)
+B70 = myboot2(x = sam, alpha = 0.3, fun = mean_median_ratio)
+B70$ci
+
+# C
+set.seed(40)
+sam=rgamma(30, shape = 2, scale = 3)
+C70 = myboot2(x = sam, alpha = 0.3, fun = mean_median_ratio)
+C$ci
+
+# D
+set.seed(10)
+sam=rbeta(20, shape1 = 3, shape2 = 4)
+D70 = myboot2(x = sam, alpha = 0.3, fun = mean_median_ratio)
+D70$ci
+```
+
+## Task 6: Unused Distributions with 80% intervals
+### Distros using mean
+```{r}
+set.seed(40)
+sam = rexp(20, rate = 1)
+myboot2(x = sam, fun = 'mean', alpha = 0.2)
+
+set.seed(50)
+sam = rpois(20, lambda = 4)
+myboot2(x = sam, fun = 'mean', alpha = 0.2)
+
+set.seed(40)
+sam = runif(20, min = 0, max = 10)
+myboot2(x = sam, fun = 'mean', alpha = 0.2)
+
+set.seed(50)
+sam = rweibull(20, shape = 2, scale = 1)
+myboot2(x = sam, fun = 'mean', alpha = 0.2)
+```
+
+### Distros using var
+```{r}
+set.seed(40)
+sam = rexp(20, rate = 1)
+myboot2(x = sam, fun = 'var', alpha = 0.2)
+
+set.seed(50)
+sam = rpois(20, lambda = 4)
+myboot2(x = sam, fun = 'var', alpha = 0.2)
+
+set.seed(40)
+sam = runif(20, min = 0, max = 10)
+myboot2(x = sam, fun = 'var', alpha = 0.2)
+
+set.seed(50)
+sam = rweibull(20, shape = 2, scale = 1)
+myboot2(x = sam, fun = 'var', alpha = 0.2)
+```
+
+## Task 7: 
+### Sample
+```{r}
+set.seed(68)
+sam = rnorm(20, mean = 10, sd = 4)
+```
+
+### Theoretical CI
+```{r}
+n <- length(sam)
+sample_mean <- mean(sam)
+sample_sd <- sd(sam)
+alpha <- 0.05
+z_alpha2 <- qnorm(1 - alpha / 2)
+
+theoretical_ci <- c(
+  sample_mean - z_alpha2 * (sample_sd / sqrt(n)),
+  sample_mean + z_alpha2 * (sample_sd / sqrt(n))
+)
+
+theoretical_ci
+```
+
+### Myboot2 CI
+```{r}
+median_result <- myboot2(iter = 10000, x = sam, fun = "median", alpha = alpha)
+median_result$ci
+
+sd_result <- myboot2(iter = 10000, x = sam, fun = "sd", alpha = alpha)
+sd_result$ci
+```
+
+## Task 8
+```{r}
+ddt <- read.csv("DDT.csv")
+obj = MATH4753KADEDUB::myboot2(x = ddt$DDT)
+obj$ci
+```

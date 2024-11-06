@@ -35,12 +35,12 @@ curve(dnorm(x, mean = 5, sd = 0.5), xlim = c(5 - 3 * 0.5, 5 + 3 * 0.5))
 ### Graph Probabilities
 ```{r}
 # 	Y∼N(0,1),P(Y≥2)
-curve(dnorm(x, mean = 0, sd = 1), xlim = c(0 - 3 * 1, 0 + 3 * 1))
-xcurve1 = seq(2, 5, length = 1000)
-ycurve1 = dnorm(xcurve1, mean = 0, sd = 1)
+curve(dnorm(x, mean = 12, sd = 4), xlim = c(12 - 3 * 4, 20))
+xcurve1 = seq(8, 13, length = 1000)
+ycurve1 = dnorm(xcurve1, mean = 12, sd = 4)
 
-polygon(c(2, xcurve1, 5), c(0, ycurve1, 0), col = "Red")
-area = pnorm(5, mean = 0, sd = 1) - pnorm(2, mean = 0, sd = 1)
+polygon(c(8, xcurve1, 13), c(0, ycurve1, 0), col = "Red")
+area = pnorm(13, mean = 12, sd = 4) - pnorm(8, mean = 12, sd = 4)
 area = round(area, 4)
 
 text(x = 2.5, y = 0.075, paste("Area= ", area, sep = " "))

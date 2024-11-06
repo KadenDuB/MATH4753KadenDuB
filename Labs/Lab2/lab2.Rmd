@@ -80,7 +80,7 @@ ggplot(epagas, aes(x='',y=mpg)) +
 
 ### Calculate the exact proportion within 2 standard deviation of the mean
 ```{r}
-length(mpg[abs(z)<2])/length(mpg)
+length(mpg[abs(z)<3])/length(mpg)
 ```
 
 ### Does Chebyshev agree with the data?
